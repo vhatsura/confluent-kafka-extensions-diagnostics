@@ -5,7 +5,7 @@
 
 The `Confluent.Kafka.Extensions.Diagnostics` package enables instrumentation of the `Confluent.Kafka` library
 via [Activity API](https://docs.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-instrumentation-walkthroughs).
- 
+
 ## Installation
 
 ```powershell
@@ -16,7 +16,7 @@ Install-Package Confluent.Kafka.Extensions.Diagnostics
 
 ### Producer
 
-Producer instrumentation is done via wrapper class and, for this reason, the producer usage is not needed to be rewritten. However, 
+Producer instrumentation is done via wrapper class and, for this reason, the producer usage is not needed to be rewritten. However,
 to enable producer instrumentation, `BuildWithInstrumentation` method should be called on the producer builder instead of `Build`.
 After that, all produce calls (sync and async) will be instrumented.
 
