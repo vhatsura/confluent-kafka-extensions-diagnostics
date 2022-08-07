@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text;
 
 namespace Confluent.Kafka.Extensions.Diagnostics;
@@ -19,7 +19,8 @@ internal static class ActivityDiagnosticsHelper
             Activity? activity = ActivitySource.StartActivity("Confluent.Kafka.Produce", ActivityKind.Producer,
                 default(ActivityContext), ActivityTags(partition)!);
 
-            if (activity == null) return null;
+            if (activity == null)
+                return null;
 
             if (activity.IsAllDataRequested)
             {
