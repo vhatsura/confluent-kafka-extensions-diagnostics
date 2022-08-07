@@ -25,10 +25,11 @@ internal class InstrumentedProducer<TKey, TValue> : IProducer<TKey, TValue>
         TopicPartition topicPartition, Message<TKey, TValue> message,
         CancellationToken cancellationToken = new CancellationToken())
     {
-        var activity = ActivityDiagnosticsHelper.Start(topicPartition, message);
+        var activity = ActivityDiagnosticsHelper.StartProduceActivity(topicPartition, message);
 
         try
         {
+            // todo: get delivery result and put it into the activity
             return await _producerImplementation.ProduceAsync(topicPartition, message, cancellationToken);
         }
         finally
@@ -38,14 +39,14 @@ internal class InstrumentedProducer<TKey, TValue> : IProducer<TKey, TValue>
     }
 
     public void Produce(
-        string topic, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>> deliveryHandler = null) =>
+        string topic, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>>? deliveryHandler = null) =>
         Produce(new TopicPartition(topic, Partition.Any), message, deliveryHandler);
 
     public void Produce(
         TopicPartition topicPartition, Message<TKey, TValue> message,
-        Action<DeliveryReport<TKey, TValue>> deliveryHandler = null)
+        Action<DeliveryReport<TKey, TValue>>? deliveryHandler = null)
     {
-        var activity = ActivityDiagnosticsHelper.Start(topicPartition, message);
+        var activity = ActivityDiagnosticsHelper.StartProduceActivity(topicPartition, message);
 
         try
         {
