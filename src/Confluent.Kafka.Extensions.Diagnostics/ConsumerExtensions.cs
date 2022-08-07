@@ -9,7 +9,7 @@ public static class ConsumerExtensions
     ///     Consumes a message from the topic with instrumentation.
     /// </summary>
     public static async Task ConsumeWithInstrumentation<TKey, TValue>(this IConsumer<TKey, TValue> consumer,
-        Func<ConsumeResult<TKey, TValue>, CancellationToken, Task> action, CancellationToken cancellationToken)
+        Func<ConsumeResult<TKey, TValue>?, CancellationToken, Task> action, CancellationToken cancellationToken)
     {
         var result = consumer.Consume(cancellationToken);
 
@@ -30,7 +30,7 @@ public static class ConsumerExtensions
     /// </summary>
     public static async Task<TResult> ConsumeWithInstrumentation<TKey, TValue, TResult>(
         this IConsumer<TKey, TValue> consumer,
-        Func<ConsumeResult<TKey, TValue>, CancellationToken, Task<TResult>> action, CancellationToken cancellationToken)
+        Func<ConsumeResult<TKey, TValue>?, CancellationToken, Task<TResult>> action, CancellationToken cancellationToken)
     {
         var result = consumer.Consume(cancellationToken);
 
@@ -50,7 +50,7 @@ public static class ConsumerExtensions
     ///     Consumes a message from the topic with instrumentation.
     /// </summary>
     public static void ConsumeWithInstrumentation<TKey, TValue>(this IConsumer<TKey, TValue> consumer,
-        Action<ConsumeResult<TKey, TValue>> action, int millisecondsTimeout)
+        Action<ConsumeResult<TKey, TValue>?> action, int millisecondsTimeout)
     {
         var result = consumer.Consume(millisecondsTimeout);
 
