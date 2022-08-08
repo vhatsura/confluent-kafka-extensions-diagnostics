@@ -30,7 +30,8 @@ internal class InstrumentedProducer<TKey, TValue> : IProducer<TKey, TValue>
         try
         {
             // todo: get delivery result and put it into the activity
-            return await _producerImplementation.ProduceAsync(topicPartition, message, cancellationToken);
+            return await _producerImplementation.ProduceAsync(topicPartition, message, cancellationToken)
+                .ConfigureAwait(false);
         }
         finally
         {
