@@ -11,6 +11,8 @@ public static class ConsumerExtensions
     public static async Task ConsumeWithInstrumentation<TKey, TValue>(this IConsumer<TKey, TValue> consumer,
         Func<ConsumeResult<TKey, TValue>?, CancellationToken, Task> action, CancellationToken cancellationToken)
     {
+        if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+
         var result = consumer.Consume(cancellationToken);
 
         var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result.TopicPartition, result.Message);
@@ -30,8 +32,11 @@ public static class ConsumerExtensions
     /// </summary>
     public static async Task<TResult> ConsumeWithInstrumentation<TKey, TValue, TResult>(
         this IConsumer<TKey, TValue> consumer,
-        Func<ConsumeResult<TKey, TValue>?, CancellationToken, Task<TResult>> action, CancellationToken cancellationToken)
+        Func<ConsumeResult<TKey, TValue>?, CancellationToken, Task<TResult>> action,
+        CancellationToken cancellationToken)
     {
+        if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+
         var result = consumer.Consume(cancellationToken);
 
         var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result.TopicPartition, result.Message);
@@ -52,6 +57,8 @@ public static class ConsumerExtensions
     public static void ConsumeWithInstrumentation<TKey, TValue>(this IConsumer<TKey, TValue> consumer,
         Action<ConsumeResult<TKey, TValue>?> action, int millisecondsTimeout)
     {
+        if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+
         var result = consumer.Consume(millisecondsTimeout);
 
         var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result.TopicPartition, result.Message);
