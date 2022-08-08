@@ -18,6 +18,7 @@
         <Authors>Vadim Hatsura</Authors>
         <Description>Confluent.Kafka instrumentationusing the [System.Diagnostics.Activity](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.activity) API</Description>
         <PackageTags>kafka, confluent, diagnostics</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <Copyright>Copyright (c) 2022 - Present</Copyright>
         <RepositoryType>git</RepositoryType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -34,6 +35,10 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
