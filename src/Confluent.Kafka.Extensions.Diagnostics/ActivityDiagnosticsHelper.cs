@@ -53,37 +53,45 @@ internal static class ActivityDiagnosticsHelper
     internal static Activity? StartConsumeActivity<TKey, TValue>(TopicPartition partition,
         Message<TKey, TValue> message)
     {
-        var activity = ActivitySource.CreateActivity("Confluent.Kafka.Consume", ActivityKind.Consumer,
-            default(ActivityContext), ActivityTags(partition)!);
-
-        if (activity != null)
+        try
         {
-            var traceParentHeader = message.Headers?.FirstOrDefault(x => x.Key == TraceParentHeaderName);
-            var traceStateHeader = message.Headers?.FirstOrDefault(x => x.Key == TraceStateHeaderName);
+            var activity = ActivitySource.CreateActivity("Confluent.Kafka.Consume", ActivityKind.Consumer,
+                default(ActivityContext), ActivityTags(partition)!);
 
-            var traceParent = traceParentHeader != null
-                ? Encoding.UTF8.GetString(traceParentHeader.GetValueBytes())
-                : null;
-            var traceState = traceStateHeader != null
-                ? Encoding.UTF8.GetString(traceStateHeader.GetValueBytes())
-                : null;
-
-            if (ActivityContext.TryParse(traceParent, traceState, out var activityContext))
+            if (activity != null)
             {
-                activity.SetParentId(activityContext.TraceId, activityContext.SpanId, activityContext.TraceFlags);
-                activity.TraceStateString = activityContext.TraceState;
+                var traceParentHeader = message.Headers?.FirstOrDefault(x => x.Key == TraceParentHeaderName);
+                var traceStateHeader = message.Headers?.FirstOrDefault(x => x.Key == TraceStateHeaderName);
+
+                var traceParent = traceParentHeader != null
+                    ? Encoding.UTF8.GetString(traceParentHeader.GetValueBytes())
+                    : null;
+                var traceState = traceStateHeader != null
+                    ? Encoding.UTF8.GetString(traceStateHeader.GetValueBytes())
+                    : null;
+
+                if (ActivityContext.TryParse(traceParent, traceState, out var activityContext))
+                {
+                    activity.SetParentId(activityContext.TraceId, activityContext.SpanId, activityContext.TraceFlags);
+                    activity.TraceStateString = activityContext.TraceState;
+                }
+
+                if (activity.IsAllDataRequested)
+                {
+                    SetActivityTags(activity, message);
+                }
+
+                activity.Start();
             }
 
-            if (activity.IsAllDataRequested)
-            {
-                SetActivityTags(activity, message);
-            }
 
-            activity.Start();
+            return activity;
         }
-
-
-        return activity;
+        catch
+        {
+            // ignore
+            return null;
+        }
     }
 
     private static void SetActivityTags<TKey, TValue>(Activity activity, Message<TKey, TValue> message)
