@@ -11,6 +11,8 @@ public static class ProducerBuilderExtensions
     public static IProducer<TKey, TValue> BuildWithInstrumentation<TKey, TValue>(
         this ProducerBuilder<TKey, TValue> producerBuilder)
     {
+        if (producerBuilder == null) throw new ArgumentNullException(nameof(producerBuilder));
+
         return new InstrumentedProducer<TKey, TValue>(producerBuilder.Build());
     }
 }
