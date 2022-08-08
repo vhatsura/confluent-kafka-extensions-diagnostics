@@ -4,6 +4,8 @@ name: Publish NuGet package
 on:
   release:
     types: [ published ]
+  push:
+    branches: [ main ]
 
 jobs:
 
