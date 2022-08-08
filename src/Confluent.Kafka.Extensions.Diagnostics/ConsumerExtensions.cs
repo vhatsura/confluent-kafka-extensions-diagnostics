@@ -12,6 +12,7 @@ public static class ConsumerExtensions
         Func<ConsumeResult<TKey, TValue>?, CancellationToken, Task> action, CancellationToken cancellationToken)
     {
         if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+        if (action == null) throw new ArgumentNullException(nameof(action));
 
         var result = consumer.Consume(cancellationToken);
 
@@ -19,7 +20,7 @@ public static class ConsumerExtensions
 
         try
         {
-            await action(result, cancellationToken);
+            await action(result, cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -36,6 +37,7 @@ public static class ConsumerExtensions
         CancellationToken cancellationToken)
     {
         if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+        if (action == null) throw new ArgumentNullException(nameof(action));
 
         var result = consumer.Consume(cancellationToken);
 
@@ -43,7 +45,7 @@ public static class ConsumerExtensions
 
         try
         {
-            return await action(result, cancellationToken);
+            return await action(result, cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -58,6 +60,7 @@ public static class ConsumerExtensions
         Action<ConsumeResult<TKey, TValue>?> action, int millisecondsTimeout)
     {
         if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+        if (action == null) throw new ArgumentNullException(nameof(action));
 
         var result = consumer.Consume(millisecondsTimeout);
 
