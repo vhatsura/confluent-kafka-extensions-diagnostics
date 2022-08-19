@@ -16,7 +16,8 @@ internal static class ActivityDiagnosticsHelper
     {
         try
         {
-            Activity? activity = ActivitySource.StartActivity("Confluent.Kafka.Produce", ActivityKind.Producer,
+            Activity? activity = ActivitySource.StartActivity(
+                $"produce kafka.{partition.Topic}{partition.Partition.ToString()}", ActivityKind.Producer,
                 default(ActivityContext), ActivityTags(partition)!);
 
             if (activity == null)
@@ -55,7 +56,8 @@ internal static class ActivityDiagnosticsHelper
     {
         try
         {
-            var activity = ActivitySource.CreateActivity("Confluent.Kafka.Consume", ActivityKind.Consumer,
+            var activity = ActivitySource.CreateActivity(
+                $"consume kafka.{partition.Topic}{partition.Partition.ToString()}", ActivityKind.Consumer,
                 default(ActivityContext), ActivityTags(partition)!);
 
             if (activity != null)
