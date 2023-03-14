@@ -63,7 +63,7 @@ try
             consumer.ConsumeWithInstrumentation((result) =>
             {
                 Console.WriteLine(result.Message.Value);
-            });
+            }, 2000);
         }
         catch (ConsumeException e)
         {

@@ -1,0 +1,57 @@
+﻿{
+  "Status": "Ok",
+  "StatusDescription": null,
+  "Kind": "Producer",
+  "OperationName": "produce_topic publish",
+  "DisplayName": "produce_topic publish",
+  "Source": {
+    "Name": "Confluent.Kafka.Extensions.Diagnostics",
+    "Version": ""
+  },
+  "Parent": null,
+  "ParentId": null,
+  "Tags": [
+    {
+      "Key": "messaging.system",
+      "Value": "kafka"
+    },
+    {
+      "Key": "messaging.operation",
+      "Value": "publish"
+    },
+    {
+      "Key": "messaging.destination.kind",
+      "Value": "topic"
+    },
+    {
+      "Key": "messaging.destination.name",
+      "Value": "produce_topic"
+    },
+    {
+      "Key": "messaging.kafka.destination.partition",
+      "Value": "0"
+    },
+    {
+      "Key": "messaging.kafka.message.offset",
+      "Value": "0"
+    }
+  ],
+  "Events": [],
+  "Links": [],
+  "Baggage": [],
+  "Context": {
+    "TraceId": {},
+    "SpanId": {},
+    "TraceFlags": "None",
+    "TraceState": null,
+    "IsRemote": false
+  },
+  "TraceStateString": null,
+  "SpanId": {},
+  "TraceId": {},
+  "Recorded": false,
+  "IsAllDataRequested": false,
+  "ActivityTraceFlags": "None",
+  "ParentSpanId": {},
+  "IdFormat": "W3C"
+}
