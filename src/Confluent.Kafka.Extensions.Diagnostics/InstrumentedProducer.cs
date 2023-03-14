@@ -29,9 +29,15 @@ internal class InstrumentedProducer<TKey, TValue> : IProducer<TKey, TValue>
 
         try
         {
-            // todo: get delivery result and put it into the activity
-            return await _producerImplementation.ProduceAsync(topicPartition, message, cancellationToken)
+            var result = await _producerImplementation.ProduceAsync(topicPartition, message, cancellationToken)
                 .ConfigureAwait(false);
+
+            if (activity != null)
+            {
+                ActivityDiagnosticsHelper.UpdateActivityTags(result, activity);
+            }
+
+            return result;
         }
         finally
         {
@@ -49,14 +55,16 @@ internal class InstrumentedProducer<TKey, TValue> : IProducer<TKey, TValue>
     {
         var activity = ActivityDiagnosticsHelper.StartProduceActivity(topicPartition, message);
 
-        try
-        {
-            _producerImplementation.Produce(topicPartition, message, deliveryHandler);
-        }
-        finally
-        {
-            activity?.Stop();
-        }
+        Action<DeliveryReport<TKey, TValue>>? handler = activity != null
+            ? report =>
+            {
+                ActivityDiagnosticsHelper.UpdateActivityTags(report, activity);
+                activity.Stop();
+                deliveryHandler?.Invoke(report);
+            }
+            : deliveryHandler;
+
+        _producerImplementation.Produce(topicPartition, message, handler);
     }
 
     public int Poll(TimeSpan timeout) => _producerImplementation.Poll(timeout);

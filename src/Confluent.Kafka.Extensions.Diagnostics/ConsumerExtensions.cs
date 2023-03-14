@@ -16,7 +16,7 @@ public static class ConsumerExtensions
 
         var result = consumer.Consume(cancellationToken);
 
-        var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result.TopicPartition, result.Message);
+        var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result, consumer.MemberId);
 
         try
         {
@@ -41,7 +41,7 @@ public static class ConsumerExtensions
 
         var result = consumer.Consume(cancellationToken);
 
-        var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result.TopicPartition, result.Message);
+        var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result, consumer.MemberId);
 
         try
         {
@@ -64,7 +64,7 @@ public static class ConsumerExtensions
 
         var result = consumer.Consume(millisecondsTimeout);
 
-        var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result.TopicPartition, result.Message);
+        var activity = ActivityDiagnosticsHelper.StartConsumeActivity(result, consumer.MemberId);
 
         try
         {

@@ -1,0 +1,61 @@
+﻿{
+  "Status": "Unset",
+  "StatusDescription": null,
+  "Kind": "Consumer",
+  "OperationName": "consume_topic process",
+  "DisplayName": "consume_topic process",
+  "Source": {
+    "Name": "Confluent.Kafka.Extensions.Diagnostics",
+    "Version": ""
+  },
+  "Parent": null,
+  "ParentId": null,
+  "Tags": [
+    {
+      "Key": "messaging.system",
+      "Value": "kafka"
+    },
+    {
+      "Key": "messaging.operation",
+      "Value": "process"
+    },
+    {
+      "Key": "messaging.source.kind",
+      "Value": "topic"
+    },
+    {
+      "Key": "messaging.source.name",
+      "Value": "consume_topic"
+    },
+    {
+      "Key": "messaging.kafka.source.partition",
+      "Value": "0"
+    },
+    {
+      "Key": "messaging.kafka.message.offset",
+      "Value": "0"
+    },
+    {
+      "Key": "messaging.kafka.client_id",
+      "Value": "rdkafka-c2db500e-d433-4447-9d0e-028728cd79c1"
+    }
+  ],
+  "Events": [],
+  "Links": [],
+  "Baggage": [],
+  "Context": {
+    "TraceId": {},
+    "SpanId": {},
+    "TraceFlags": "None",
+    "TraceState": null,
+    "IsRemote": false
+  },
+  "TraceStateString": null,
+  "SpanId": {},
+  "TraceId": {},
+  "Recorded": false,
+  "IsAllDataRequested": false,
+  "ActivityTraceFlags": "None",
+  "ParentSpanId": {},
+  "IdFormat": "W3C"
+}

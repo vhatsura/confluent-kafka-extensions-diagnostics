@@ -17,8 +17,8 @@ internal static class ActivityDiagnosticsHelper
         try
         {
             Activity? activity = ActivitySource.StartActivity(
-                $"produce kafka.{partition.Topic}{partition.Partition.ToString()}", ActivityKind.Producer,
-                default(ActivityContext), ActivityTags(partition)!);
+                $"{partition.Topic} publish", ActivityKind.Producer,
+                default(ActivityContext), ProducerActivityTags(partition));
 
             if (activity == null)
                 return null;
@@ -51,14 +51,40 @@ internal static class ActivityDiagnosticsHelper
         }
     }
 
-    internal static Activity? StartConsumeActivity<TKey, TValue>(TopicPartition partition,
-        Message<TKey, TValue> message)
+    internal static void UpdateActivityTags<TKey, TValue>(DeliveryResult<TKey, TValue> deliveryResult,
+        Activity activity)
     {
         try
         {
+            var activityStatus = deliveryResult.Status switch
+            {
+                PersistenceStatus.Persisted => ActivityStatusCode.Ok,
+                PersistenceStatus.NotPersisted => ActivityStatusCode.Error,
+                _ => ActivityStatusCode.Unset
+            };
+
+            activity.SetStatus(activityStatus);
+            if (activityStatus == ActivityStatusCode.Ok)
+            {
+                activity.SetTag("messaging.kafka.destination.partition", deliveryResult.Partition.Value.ToString());
+                activity.SetTag("messaging.kafka.message.offset", deliveryResult.Offset.Value.ToString());
+            }
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    internal static Activity? StartConsumeActivity<TKey, TValue>(ConsumeResult<TKey, TValue> consumerResult,
+        string memberId)
+    {
+        try
+        {
+            var message = consumerResult.Message;
             var activity = ActivitySource.CreateActivity(
-                $"consume kafka.{partition.Topic}{partition.Partition.ToString()}", ActivityKind.Consumer,
-                default(ActivityContext), ActivityTags(partition)!);
+                $"{consumerResult.Topic} process", ActivityKind.Consumer,
+                default(ActivityContext), ConsumerActivityTags(consumerResult, memberId));
 
             if (activity != null)
             {
@@ -100,19 +126,43 @@ internal static class ActivityDiagnosticsHelper
     {
         if (message.Key != null)
         {
-            activity.SetTag("messaging.kafka.message_key", message.Key.ToString());
+            activity.SetTag("messaging.kafka.message.key", message.Key.ToString());
         }
     }
 
-    private static IEnumerable<KeyValuePair<string, object>> ActivityTags(TopicPartition partition)
+    private static IEnumerable<KeyValuePair<string, object?>> ProducerActivityTags(TopicPartition partition)
     {
-        return new[]
+        var list = ActivityTags(partition, "publish");
+
+        list.Add(new KeyValuePair<string, object?>("messaging.destination.kind", "topic"));
+        list.Add(new KeyValuePair<string, object?>("messaging.destination.name", partition.Topic));
+
+        return list;
+    }
+
+    private static IEnumerable<KeyValuePair<string, object?>> ConsumerActivityTags<TKey, TValue>(
+        ConsumeResult<TKey, TValue> consumerResult, string memberId)
+    {
+        IList<KeyValuePair<string, object?>> list = ActivityTags(consumerResult.TopicPartition, "process");
+
+        // messaging.consumer.id - For Kafka, set it to {messaging.kafka.consumer.group} - {messaging.kafka.client_id},
+        // if both are present, or only messaging.kafka.consumer.group
+        list.Add(new("messaging.source.kind", "topic"));
+        list.Add(new("messaging.source.name", consumerResult.Topic));
+        list.Add(new("messaging.kafka.source.partition", consumerResult.Partition.Value.ToString()));
+        list.Add(new("messaging.kafka.message.offset", consumerResult.Offset.Value.ToString()));
+        list.Add(new("messaging.kafka.client_id", memberId));
+
+        // messaging.kafka.consumer.group - there is no way to access this information from the consumer
+
+        return list;
+    }
+
+    private static IList<KeyValuePair<string, object?>> ActivityTags(TopicPartition partition, string operation)
+    {
+        return new List<KeyValuePair<string, object?>>()
         {
-            new KeyValuePair<string, object>("messaging.system", "kafka"),
-            new KeyValuePair<string, object>("messaging.destination", partition.Topic),
-            new KeyValuePair<string, object>("messaging.destination_kind", "topic"), new KeyValuePair<string, object>(
-                "messaging.kafka.partition",
-                partition.Partition.ToString())
+            new("messaging.system", "kafka"), new("messaging.operation", operation)
         };
     }
 }
