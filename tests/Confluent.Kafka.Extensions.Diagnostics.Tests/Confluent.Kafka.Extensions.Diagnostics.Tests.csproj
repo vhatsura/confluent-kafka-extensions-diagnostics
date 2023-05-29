@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Confluent.Kafka" Version="2.0.2"/>
-        <PackageReference Include="FluentAssertions" Version="6.10.0"/>
+        <PackageReference Include="FluentAssertions" Version="6.11.0"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0"/>
         <PackageReference Include="Snapshooter.Xunit" Version="0.13.0"/>
         <PackageReference Include="TestEnvironment.Docker.Containers.Kafka" Version="2.1.4"/>
