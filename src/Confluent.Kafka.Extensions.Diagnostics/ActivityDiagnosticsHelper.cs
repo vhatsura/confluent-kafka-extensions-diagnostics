@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Confluent.Kafka.Extensions.Diagnostics;
 
-internal static class ActivityDiagnosticsHelper
+public static class ActivityDiagnosticsHelper
 {
     private const string ActivitySourceName = "Confluent.Kafka.Extensions.Diagnostics";
     private const string TraceParentHeaderName = "traceparent";
@@ -11,7 +11,7 @@ internal static class ActivityDiagnosticsHelper
 
     private static ActivitySource ActivitySource { get; } = new(ActivitySourceName);
 
-    internal static Activity? StartProduceActivity<TKey, TValue>(TopicPartition partition,
+    public static Activity? StartProduceActivity<TKey, TValue>(TopicPartition partition,
         Message<TKey, TValue> message)
     {
         try
@@ -51,7 +51,7 @@ internal static class ActivityDiagnosticsHelper
         }
     }
 
-    internal static void UpdateActivityTags<TKey, TValue>(DeliveryResult<TKey, TValue> deliveryResult,
+    public static void UpdateActivityTags<TKey, TValue>(DeliveryResult<TKey, TValue> deliveryResult,
         Activity activity)
     {
         try
@@ -76,7 +76,7 @@ internal static class ActivityDiagnosticsHelper
         }
     }
 
-    internal static Activity? StartConsumeActivity<TKey, TValue>(ConsumeResult<TKey, TValue> consumerResult,
+    public static Activity? StartConsumeActivity<TKey, TValue>(ConsumeResult<TKey, TValue> consumerResult,
         string memberId)
     {
         try
