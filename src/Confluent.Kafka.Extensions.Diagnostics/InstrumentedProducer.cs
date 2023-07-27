@@ -13,6 +13,11 @@ internal class InstrumentedProducer<TKey, TValue> : IProducer<TKey, TValue>
 
     public int AddBrokers(string brokers) => _producerImplementation.AddBrokers(brokers);
 
+    public void SetSaslCredentials(string username, string password)
+    {
+        _producerImplementation.SetSaslCredentials(username, password);
+    }
+
     public Handle Handle => _producerImplementation.Handle;
 
     public string Name => _producerImplementation.Name;
