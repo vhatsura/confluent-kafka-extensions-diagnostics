@@ -1,10 +1,9 @@
 ﻿{
   "Status": "Ok",
   "StatusDescription": null,
-  "HasRemoteParent": false,
   "Kind": "Producer",
-  "OperationName": "produce_async_topic publish",
-  "DisplayName": "produce_async_topic publish",
+  "OperationName": "dependent_produce_async_topic publish",
+  "DisplayName": "dependent_produce_async_topic publish",
   "Source": {
     "Name": "Confluent.Kafka.Extensions.Diagnostics",
     "Version": ""
@@ -26,7 +25,7 @@
     },
     {
       "Key": "messaging.destination.name",
-      "Value": "produce_async_topic"
+      "Value": "dependent_produce_async_topic"
     },
     {
       "Key": "messaging.kafka.destination.partition",
@@ -34,7 +33,7 @@
     },
     {
       "Key": "messaging.kafka.message.offset",
-      "Value": "1"
+      "Value": "0"
     }
   ],
   "Events": [],
@@ -54,6 +53,5 @@
   "IsAllDataRequested": false,
   "ActivityTraceFlags": "None",
   "ParentSpanId": {},
-  "IsStopped": true,
   "IdFormat": "W3C"
 }
