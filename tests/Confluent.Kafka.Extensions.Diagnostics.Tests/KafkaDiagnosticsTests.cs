@@ -59,7 +59,7 @@ public sealed class KafkaDiagnosticsTests : IAssemblyFixture<EnvironmentFixture>
         ActivitySource.AddActivityListener(listener);
 
         // Act
-        await _dependentProducer.ProduceAsync("produce_async_topic",
+        await _dependentProducer.ProduceAsync("dependent_produce_async_topic",
             new Message<string, string> { Key = "test", Value = "Hello World!" });
     }
 
@@ -77,7 +77,7 @@ public sealed class KafkaDiagnosticsTests : IAssemblyFixture<EnvironmentFixture>
         var delivered = false;
 
         // Act
-        _dependentProducer.Produce("produce_topic",
+        _dependentProducer.Produce("dependent_produce_topic",
             new Message<string, string> { Key = "test", Value = "Hello World!" }, report =>
             {
                 delivered = true;
